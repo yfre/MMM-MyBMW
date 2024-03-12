@@ -1,10 +1,16 @@
+
 Module.register("MMM-MyBMW", {
   defaults: {
     region: 'rest',
     refresh: 15,
     vehicleOpacity: 0.75,
-    distance: "miles",
-    debug: false
+    distance: "km",
+    lastUpdatedText: "Updated",
+    showMileage: true,
+    showFuelRange: true,
+    showElectricPercentage: true,
+    showElectricRange: true,
+    showLastUpdated: true
   },
 
   getStyles: function () {
@@ -13,10 +19,6 @@ Module.register("MMM-MyBMW", {
 
   getScripts: function () {
     return ["moment.js"];
-  },
-
-  capFirst: function (string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
   },
 
   start: function () {
@@ -31,8 +33,8 @@ Module.register("MMM-MyBMW", {
     clearTimeout(this.timer);
     this.timer = null;
     this.sendSocketNotification("MMM-MYBMW-GET", {
-	  instanceId: this.identifier,
-	  vin: this.config.vin	
+	    instanceId: this.identifier,
+	    vin: this.config.vin	
     });
 
     var self = this;
@@ -46,7 +48,7 @@ Module.register("MMM-MyBMW", {
       notification === "MMM-MYBMW-RESPONSE" + this.identifier &&
       Object.keys(payload).length > 0
     ) {
-      this.bmwInfo = payload[this.config.vin];
+      this.bmwInfo = payload;
       this.updateDom(1000);
     }
   },
@@ -98,53 +100,21 @@ Module.register("MMM-MyBMW", {
     
     wrapper.appendChild(carContainer);
 
-    var locked = document.createElement("span");
-    locked.classList.add("locked");
-	  var lockInfo = info.doorLock.toLowerCase();
-    if (lockInfo === "secured" || lockInfo === "locked") {
-      locked.appendChild(this.faIconFactory("fa-lock"));
-    } else {
-      locked.appendChild(this.faIconFactory("fa-lock-open"));
-    }
-    carContainer.appendChild(locked);
-
-    var mileage = document.createElement("span");
-    mileage.classList.add("mileage");
-    if (this.config.showMileage) {
-      mileage.appendChild(this.faIconFactory("fa-road"));
-/*      if(distanceSuffix != info.mileage) {
-        if(distanceSuffix == 'km') {
-          info.mileage = Math.floor(info.mileage * 1.60934);
-        } else {
-          info.mileage = Math.floor(info.mileage * 0.621371);
-        } 
-      }  */
-      mileage.appendChild(document.createTextNode(info.mileage + " " + distanceSuffix));
-    } else {
-      mileage.appendChild(document.createTextNode("\u00a0"));
-    }
-    carContainer.appendChild(mileage);
-    wrapper.appendChild(carContainer);
-
-    carContainer = document.createElement("div");
-    carContainer.classList.add("bmw-container");
-
-    var plugged = document.createElement("span");
-    plugged.classList.add("plugged");
-    if (info.connectorStatus) {
-      plugged.appendChild(this.faIconFactory("fa-bolt"));
-    } else {
-      plugged.appendChild(this.faIconFactory("fa-plug"));
-    }
-    carContainer.appendChild(plugged);
-    
-    wrapper.appendChild(carContainer);
-
     carContainer = document.createElement("div");
     carContainer.classList.add("bmw-container");
     var battery = document.createElement("span");
     battery.classList.add("battery");
     
+    var plugged = document.createElement("span");
+    plugged.classList.add("plugged");
+    if (info.connectorStatus) {
+      plugged.appendChild(this.faIconFactory("fa-bolt"));
+    } else {
+      //plugged.appendChild(this.faIconFactory("fa-plug"));
+      plugged.appendChild(document.createTextNode("\u00a0"));
+    }
+    battery.appendChild(plugged);
+
     switch (true) {
     case (info.chargingLevelHv < 25):
       battery.appendChild(this.faIconFactory("fa-battery-empty"));
@@ -168,6 +138,24 @@ Module.register("MMM-MyBMW", {
     }
     carContainer.appendChild(battery);
     wrapper.appendChild(carContainer);
+
+    var mileage = document.createElement("span");
+    mileage.classList.add("mileage");
+    if (this.config.showMileage) {
+      mileage.appendChild(this.faIconFactory("fa-road"));
+/*      if(distanceSuffix != info.mileage) {
+        if(distanceSuffix == 'km') {
+          info.mileage = Math.floor(info.mileage * 1.60934);
+        } else {
+          info.mileage = Math.floor(info.mileage * 0.621371);
+        } 
+      }  */
+      mileage.appendChild(document.createTextNode(info.mileage + " " + distanceSuffix));
+    } else {
+      mileage.appendChild(document.createTextNode("\u00a0"));
+    }
+    carContainer.appendChild(mileage);
+    wrapper.appendChild(carContainer);
     
     carContainer = document.createElement("div");
     carContainer.classList.add("bmw-container");
@@ -181,10 +169,28 @@ Module.register("MMM-MyBMW", {
       elecRange.appendChild(document.createTextNode("\u00a0"));
     }
     carContainer.appendChild(elecRange);
+    wrapper.appendChild(carContainer);
+
+    carContainer = document.createElement("div");
+    carContainer.classList.add("bmw-container");
+    carContainer.classList.add("spacer");
+    wrapper.appendChild(carContainer);
+
+    carContainer = document.createElement("div");
+    carContainer.classList.add("bmw-container");
+
+    var locked = document.createElement("span");
+    locked.classList.add("locked");
+    if (info.doorLock) {
+      locked.appendChild(this.faIconFactory("fa-lock"));
+    } else {
+      locked.appendChild(this.faIconFactory("fa-lock-open"));
+    }
+    carContainer.appendChild(locked);
     
     var fuelRange = document.createElement("span");
     fuelRange.classList.add("fuelRange");
-    if (this.config.showFuelRange) {
+    if (this.config.showFuelRange && (info.fuelRange > 0)) {
       fuelRange.appendChild(this.faIconFactory("fa-gas-pump"));
       fuelRange.appendChild(document.createTextNode(info.fuelRange + " " + distanceSuffix));
     } else {
@@ -196,12 +202,17 @@ Module.register("MMM-MyBMW", {
     carContainer = document.createElement("div");
     carContainer.classList.add("bmw-container");
     carContainer.classList.add("updated");
+    
     var updated = document.createElement("span");
     updated.classList.add("updated");
-    updated.appendChild(this.faIconFactory("fa-info"));
-    var lastUpdateText = this.config.lastUpdatedText + " " + moment(info.updateTime).fromNow();
-    if (this.config.debug) {
-      lastUpdateText += " [" + info.unitOfLength + "]";
+    if (this.config.showLastUpdated) {
+      updated.appendChild(this.faIconFactory("fa-info"));
+      var lastUpdateText = this.config.lastUpdatedText + " " + moment(info.updateTime).fromNow();
+      if (this.config.debug) {
+        lastUpdateText += " [" + info.unitOfLength + "]";
+      }
+    } else {
+      lastUpdateText = "";
     }
     updated.appendChild(document.createTextNode(lastUpdateText));
     carContainer.appendChild(updated);

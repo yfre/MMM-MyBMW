@@ -1,8 +1,5 @@
-.MMM-MyBMW .bmw-wrapper {
-  height: 100px;
-}
 .MMM-MyBMW .bmw-container {
-  width: 320px;
+  width: 280px;
   line-height: 1.50;
   font-size: 20px;
   padding: 0;
@@ -12,9 +9,13 @@
 
 .MMM-MyBMW .bmw-container img {
   position: absolute;
-  width: 320px;
-  top: -45px;
-  left: -5px;
+  width: auto;
+  height: auto;
+  max-width: 220px;
+  max-height: 95px;
+  top: 35px;
+  left: 50%;
+  transform: translate(-50%, 0%);
 }
 
 .MMM-MyBMW .bmw-container .fas {
@@ -24,8 +25,11 @@
 
 .MMM-MyBMW .bmw-container .locked {
   width: 30px;
-  text-align: center;
-  margin-right: 30px;
+}
+
+.MMM-MyBMW .bmw-container .plugged {
+  margin-left: -3px;
+  margin-right: -3px;
 }
 
 .MMM-MyBMW .bmw-container .mileage {
@@ -38,5 +42,9 @@
 
 .MMM-MyBMW .bmw-container .updated {
   font: bold 16px Helvetica, Sans-Serif;
-  text-align: left !important;
+  text-align: right !important;
+}
+
+.MMM-MyBMW .bmw-container.spacer {
+  height: 45px;
 }

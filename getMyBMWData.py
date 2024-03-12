@@ -30,7 +30,7 @@ async def main(email, password, vin, region):
     data = {
         'updateTime': vehicle.vehicle_location.vehicle_update_timestamp.isoformat(),
         'mileage': vehicle.mileage.value,
-        'doorLock': (vehicle.doors_and_windows.door_lock_state == LockState.LOCKED),
+        'doorLock': (vehicle.doors_and_windows.door_lock_state == LockState.LOCKED) or (vehicle.doors_and_windows.door_lock_state == LockState.SECURED),
         'fuelRange': vehicle.fuel_and_battery.remaining_range_fuel.value,
         'electricRange': vehicle.fuel_and_battery.remaining_range_electric.value,
         'chargingLevelHv': vehicle.fuel_and_battery.remaining_battery_percent,

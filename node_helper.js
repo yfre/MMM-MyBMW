@@ -20,17 +20,22 @@ module.exports = NodeHelper.create({
     } else if (notification == "MMM-MYBMW-GET") {
       const config = self.config[vin];  
 
-      const pythonProcess = spawn('python3',["module/MMM-MyBMW/getMyBMWData.py", config.email, config.password, config.vin, config.region]);
+      const pythonProcess = spawn('python3',["modules/MMM-MyBMW/getMyBMWData.py", config.email, config.password, config.vin, config.region]);
       
       pythonProcess.stdout.on('data', (data) => {
         self.bmwInfo[vin] = JSON.parse(data);
         self.sendResponse(payload);
       });
+
+      pythonProcess.stderr.on('data', (data) => {
+        console.error(`bimmer_connected error: ${data}`);
+      });
+
     }
   },
 
   sendResponse: function (payload) {
-    this.sendSocketNotification("MMM-MYBMW-RESPONSE" + payload.instanceId, this.bmwInfo);
+    this.sendSocketNotification("MMM-MYBMW-RESPONSE" + payload.instanceId, this.bmwInfo[payload.vin]);
   },
 
 });
