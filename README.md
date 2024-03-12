@@ -1,21 +1,23 @@
-# MMM-BMWConnected
-Magic Mirror Module to display data from BMW Connected drive for your car(s).
+# MMM-MyBMW
+Magic Mirror Module to display data from MyBMW for your car(s).
 
-**Unfortunately, the module connection to BMW back-end is broken and thus it is not functional. I have currently no time to debug the issue, as it seems to be rather big.**
+Based on MMM-BMWConnected by Howard Durdle.
 
 ![Screenshot](screenshot.png "Screenshot")
 
-The module displays icons to show lock, charging and battery status, electric and combined range, and total kilometers driven. It also shows the time the Connected Drive API last received data from the car.
+The module displays icons to show lock, charging and battery status, electric and combined range, and total kilometers driven. It also shows the time the MyBMW API last received data from the car.
 
 If you own several BMW cars, you can configure a module for each of them. The module configuration requires the vin number of the car to separate multiple module instances.
 
 ## Installation
 
+A working python installation and the bimmer_connected package are required.
+
 Clone this repository in your modules folder, and install dependencies:
 
-    cd ~/MagicMirror/modules 
-    git clone https://github.com/jannekalliola/MMM-BMWConnected.git
-    cd MMM-BMWConnected
+    cd ~/MagicMirror/modules
+    git clone https://github.com/Jargendas/MMM-MyBMW.git
+    cd MMM-MyBMW
     npm install 
 
 
@@ -23,13 +25,12 @@ Clone this repository in your modules folder, and install dependencies:
 
 Go to the MagicMirror/config directory and edit the config.js file. Add the module to your modules array in your config.js.
 
-You'll need your BMW Connected Drive email and password, and your car's vin number.
+You'll need your MyBMW email and password, and your car's vin number.
 
 Enter these details in the config.js for your MagicMirror installation:
 
         {
-            module: "MMM-BMWConnected",
-            header: 'BMW Connected',
+            module: "MMM-MyBMW",
             position: "top_right",
             config: {
                 email: "email@example.com",
@@ -51,19 +52,15 @@ The module has a few configuration options:
   <tbody>
     <tr>
       <td><code>email</code></td>
-      <td>Your username or email for the BMW Connected Drive platform, required.<br /><br /><strong>Default: </strong><code>undefined</code></td>
+      <td>Your username or email for the MyBMW platform, required.<br /><br /><strong>Default: </strong><code>undefined</code></td>
     </tr>
     <tr>
       <td><code>password</code></td>
-      <td>Your password for the BMW Connected Drive platform, required.<br /><br /><strong>Default: </strong><code>undefined</code></td>
+      <td>Your password for the MyBMW platform, required.<br /><br /><strong>Default: </strong><code>undefined</code></td>
     </tr>
     <tr>
       <td><code>vin</code></td>
       <td>Your car's vin code, required.<br /><br /><strong>Default: </strong><code>undefined</code></td>
-    </tr>
-    <tr>
-      <td><code>apiBase</code></td>
-      <td>The location of the base API URL for your region.<br /><br /><strong>Default: </strong><code>cocoapi.bmwgroup.com</code></td>
     </tr>
     <tr>
       <td><code>refresh</code></td>
@@ -110,8 +107,4 @@ Thanks to [Eugen](https://github.com/yfre/MMM-BMWConnected) for fixing the conne
 
 ## Changelog
 
-**2022-12-13** Fixed BMW connectivity and added support for several module instances, separated by vin codes. Currently tested only with European region. The car image is downloaded from the API and stored into a local file. The angle of the car cannot be selected anymore due to BMW API changes.
-
-**2022-06-13** Fixed mileage into kilometers, moved the car image to background, and added information about `vehicleOpacity` config option. Changed the example image.
-
-**2022-05-30** Detached from previous versions.
+**2024-03-12** Forked from MMM-BMWConnected and migrated to MyBMW via bimmer_connected.

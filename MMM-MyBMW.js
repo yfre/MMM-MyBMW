@@ -1,6 +1,6 @@
-Module.register("MMM-BMWConnected", {
+Module.register("MMM-MyBMW", {
   defaults: {
-    apiBase: "cocoapi.bmwgroup.com",
+    region: 'rest',
     refresh: 15,
     vehicleOpacity: 0.75,
     distance: "miles",
@@ -8,7 +8,7 @@ Module.register("MMM-BMWConnected", {
   },
 
   getStyles: function () {
-    return ["MMM-BMWConnected.css"];
+    return ["MMM-MyBMW.css"];
   },
 
   getScripts: function () {
@@ -21,7 +21,7 @@ Module.register("MMM-BMWConnected", {
 
   start: function () {
     Log.info("Starting module: " + this.name);
-    this.sendSocketNotification("MMM-BMWCONNECTED-CONFIG", this.config);
+    this.sendSocketNotification("MMM-MYBMW-CONFIG", this.config);
     this.bmwInfo = {};
     this.getInfo();
     this.timer = null;
@@ -30,7 +30,7 @@ Module.register("MMM-BMWConnected", {
   getInfo: function () {
     clearTimeout(this.timer);
     this.timer = null;
-    this.sendSocketNotification("MMM-BMWCONNECTED-GET", {
+    this.sendSocketNotification("MMM-MYBMW-GET", {
 	  instanceId: this.identifier,
 	  vin: this.config.vin	
     });
@@ -43,7 +43,7 @@ Module.register("MMM-BMWConnected", {
 
   socketNotificationReceived: function (notification, payload) {
     if (
-      notification === "MMM-BMWCONNECTED-RESPONSE" + this.identifier &&
+      notification === "MMM-MYBMW-RESPONSE" + this.identifier &&
       Object.keys(payload).length > 0
     ) {
       this.bmwInfo = payload[this.config.vin];
