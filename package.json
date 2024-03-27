@@ -8,7 +8,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "install": "npm install && pip -r requirements.txt"
   },
   "author": "Jonathan Andree",
   "license": "MIT",

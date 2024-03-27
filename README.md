@@ -1,17 +1,19 @@
 # MMM-MyBMW
 Magic Mirror Module to display data from MyBMW for your car(s).
 
-Based on MMM-BMWConnected by Howard Durdle.
-
 ![Screenshot](screenshot.png "Screenshot")
 
 The module displays icons to show lock, charging and battery status, electric and combined range, and total kilometers driven. It also shows the time the MyBMW API last received data from the car.
 
 If you own several BMW cars, you can configure a module for each of them. The module configuration requires the vin number of the car to separate multiple module instances.
 
-## Installation
+The module is heavily based on [MMM-BMWConnected](https://github.com/jannekalliola/MMM-BMWConnected) by [Howard Durdle](https://github.com/hdurdle) and [Janne Kalliola](https://github.com/jannekalliola) and uses [bimmer_connected](https://github.com/bimmerconnected/bimmer_connected) to query the MyBMW API.
 
-A working python installation and the bimmer_connected package are required.
+## Requirements
+
+**A working python 3 distribution with pip is required before the installation.**
+
+## Installation
 
 Clone this repository in your modules folder, and install dependencies:
 
@@ -25,7 +27,7 @@ Clone this repository in your modules folder, and install dependencies:
 
 Go to the MagicMirror/config directory and edit the config.js file. Add the module to your modules array in your config.js.
 
-You'll need your MyBMW email and password, and your car's vin number.
+You'll need your MyBMW email and password, and your car's VIN number.
 
 Enter these details in the config.js for your MagicMirror installation:
 
@@ -52,7 +54,7 @@ The module has a few configuration options:
   <tbody>
     <tr>
       <td><code>email</code></td>
-      <td>Your username or email for the MyBMW platform, required.<br /><br /><strong>Default: </strong><code>undefined</code></td>
+      <td>Your email for the MyBMW platform, required.<br /><br /><strong>Default: </strong><code>undefined</code></td>
     </tr>
     <tr>
       <td><code>password</code></td>
@@ -60,19 +62,19 @@ The module has a few configuration options:
     </tr>
     <tr>
       <td><code>vin</code></td>
-      <td>Your car's vin code, required.<br /><br /><strong>Default: </strong><code>undefined</code></td>
+      <td>Your car's VIN code, required.<br /><br /><strong>Default: </strong><code>undefined</code></td>
+    </tr>
+    <tr>
+      <td><code>region</code></td>
+      <td>Must be set to the region your car is operating in, required for the MyBMW API. Can be <code>us</code>, <code>cn</code>, or <code>rest</code>.<br /><br /><strong>Default: </strong><code>rest</code></td>
     </tr>
     <tr>
       <td><code>refresh</code></td>
-      <td>How often to refresh the data in minutes. <br /><br /><strong>Default: </strong><code>15</code> </td>
+      <td>How often to refresh the data in minutes. <br /> <br />Be careful: BMW limits the amount of calls per account per day (to ~200 ?), so don't set this value too low.<br /><br /><strong>Default: </strong><code>15</code> </td>
     </tr>
     <tr>
       <td><code>vehicleOpacity</code></td>
       <td>The opacity of the car image. <br /><br /><strong>Default: </strong><code>0.75</code><br/>Between 0 and 1.</td>
-    </tr>
-    <tr>
-      <td><code>distance</code></td>
-      <td>The unit of distance used for mileage and range. <br /><br /><strong>Default: </strong><code>miles</code><br/>Can be: miles or km.</td>
     </tr>
     <tr>
       <td><code>showMileage</code></td>
@@ -80,30 +82,26 @@ The module has a few configuration options:
     </tr>
     <tr>
       <td><code>showElectricRange</code></td>
-      <td>Whether to show the electric range. <br /><br /><strong>Default: </strong><code>true</code>
+      <td>Whether to show the electric range. Will be hidden automatically if electric range is zero (i.e. when car is not electric).<br /><br /><strong>Default: </strong><code>true</code>
     </tr>
     <tr>
       <td><code>showElectricPercentage</code></td>
-      <td>Whether to show the battery charging also in percentages. <br /><br /><strong>Default: </strong><code>false</code>
+      <td>Whether to show the battery charging also in percentages. Will be hidden automatically if electric range is zero (i.e. when car is not electric).<br /><br /><strong>Default: </strong><code>true</code>
     </tr>
     <tr>
       <td><code>showFuelRange</code></td>
-      <td>Whether to show the fuel range. Note that BMW API returns the electric range as fuel range for fully electric cars.<br /><br /><strong>Default: </strong><code>true</code>
+      <td>Whether to show the fuel range. Will be hidden automatically if fuel range is zero (i.e. when car is  electric). <br /><br /><strong>Default: </strong><code>true</code>
+    </tr>
+    <tr>
+      <td><code>showLastUpdated</code></td>
+      <td>Whether to show the info when the data was last updated. <br /><br /><strong>Default: </strong><code>true</code>
     </tr>
     <tr>
       <td><code>lastUpdatedText</code></td>
-      <td>The text to be shown before last updated timestamp. <br /><br /><strong>Default: </strong><code>last updated</code>
+      <td>The text to be shown before the last updated timestamp. <br /><br /><strong>Default: </strong><code>last updated</code>
     </tr>
   </tbody>
 </table>
-
-## Thanks
-
-Biggest thanks to [Howard Durdle](https://github.com/hdurdle) for writing the initial version and maintaining the module for several years.
-
-Hat tip to [Nils Schneider](https://github.com/Lyve1981/BMW-ConnectedDrive-JSON-Wrapper) for the library code for performing the BMW authentication dance.
-
-Thanks to [Eugen](https://github.com/yfre/MMM-BMWConnected) for fixing the connectivity issues.
 
 ## Changelog
 

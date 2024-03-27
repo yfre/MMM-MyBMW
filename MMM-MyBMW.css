@@ -42,7 +42,8 @@
 
 .MMM-MyBMW .bmw-container .updated {
   font: bold 16px Helvetica, Sans-Serif;
-  text-align: right !important;
+  white-space: nowrap;
+  margin-left: -3px;
 }
 
 .MMM-MyBMW .bmw-container.spacer {

@@ -4,13 +4,12 @@ Module.register("MMM-MyBMW", {
     region: 'rest',
     refresh: 15,
     vehicleOpacity: 0.75,
-    distance: "km",
-    lastUpdatedText: "Updated",
     showMileage: true,
-    showFuelRange: true,
     showElectricPercentage: true,
     showElectricRange: true,
-    showLastUpdated: true
+    showFuelRange: true,
+    showLastUpdated: true,
+    lastUpdatedText: "last updated"
   },
 
   getStyles: function () {
@@ -61,11 +60,6 @@ Module.register("MMM-MyBMW", {
   },
 
   getDom: function () {
-    var distanceSuffix = "mi";
-    if (this.config.distance === "km") {
-      distanceSuffix = "km";
-    }
-
     var wrapper = document.createElement("div");
 	  wrapper.classList.add("bmw-wrapper");
 
@@ -116,24 +110,24 @@ Module.register("MMM-MyBMW", {
     battery.appendChild(plugged);
 
     switch (true) {
-    case (info.chargingLevelHv < 25):
-      battery.appendChild(this.faIconFactory("fa-battery-empty"));
-      break;
-    case (info.chargingLevelHv < 50):
-      battery.appendChild(this.faIconFactory("fa-battery-quarter"));
-      break;
-    case (info.chargingLevelHv < 75):
-      battery.appendChild(this.faIconFactory("fa-battery-half"));
-      break;
-    case (info.chargingLevelHv < 100):
-      battery.appendChild(this.faIconFactory("fa-battery-three-quarters"));
-      break;
-    default:
-      battery.appendChild(this.faIconFactory("fa-battery-full"));
-      break;
+      case (info.chargingLevelHv < 25):
+        battery.appendChild(this.faIconFactory("fa-battery-empty"));
+        break;
+      case (info.chargingLevelHv < 50):
+        battery.appendChild(this.faIconFactory("fa-battery-quarter"));
+        break;
+      case (info.chargingLevelHv < 75):
+        battery.appendChild(this.faIconFactory("fa-battery-half"));
+        break;
+      case (info.chargingLevelHv < 100):
+        battery.appendChild(this.faIconFactory("fa-battery-three-quarters"));
+        break;
+      default:
+        battery.appendChild(this.faIconFactory("fa-battery-full"));
+        break;
     }
 
-    if (this.config.showElectricPercentage) {
+    if (this.config.showElectricPercentage  && (info.electricRange > 0)) {
       battery.appendChild(document.createTextNode(info.chargingLevelHv + " %"));
     }
     carContainer.appendChild(battery);
@@ -143,14 +137,7 @@ Module.register("MMM-MyBMW", {
     mileage.classList.add("mileage");
     if (this.config.showMileage) {
       mileage.appendChild(this.faIconFactory("fa-road"));
-/*      if(distanceSuffix != info.mileage) {
-        if(distanceSuffix == 'km') {
-          info.mileage = Math.floor(info.mileage * 1.60934);
-        } else {
-          info.mileage = Math.floor(info.mileage * 0.621371);
-        } 
-      }  */
-      mileage.appendChild(document.createTextNode(info.mileage + " " + distanceSuffix));
+      mileage.appendChild(document.createTextNode(info.mileage));
     } else {
       mileage.appendChild(document.createTextNode("\u00a0"));
     }
@@ -162,9 +149,9 @@ Module.register("MMM-MyBMW", {
 
     var elecRange = document.createElement("span");
     elecRange.classList.add("elecRange");
-    if (this.config.showElectricRange) {
+    if (this.config.showElectricRange && (info.electricRange > 0)) {
       elecRange.appendChild(this.faIconFactory("fa-charging-station"));
-      elecRange.appendChild(document.createTextNode(info.electricRange + " " + distanceSuffix));
+      elecRange.appendChild(document.createTextNode(info.electricRange));
     } else {
       elecRange.appendChild(document.createTextNode("\u00a0"));
     }
@@ -192,7 +179,7 @@ Module.register("MMM-MyBMW", {
     fuelRange.classList.add("fuelRange");
     if (this.config.showFuelRange && (info.fuelRange > 0)) {
       fuelRange.appendChild(this.faIconFactory("fa-gas-pump"));
-      fuelRange.appendChild(document.createTextNode(info.fuelRange + " " + distanceSuffix));
+      fuelRange.appendChild(document.createTextNode(info.fuelRange));
     } else {
       fuelRange.appendChild(document.createTextNode("\u00a0"));
     }
