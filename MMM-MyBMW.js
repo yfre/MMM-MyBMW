@@ -127,7 +127,7 @@ Module.register("MMM-MyBMW", {
         break;
     }
 
-    if (this.config.showElectricPercentage  && (info.electricRange > 0)) {
+    if (this.config.showElectricPercentage  && (info.electricRange != '')) {
       battery.appendChild(document.createTextNode(info.chargingLevelHv + " %"));
     }
     carContainer.appendChild(battery);
@@ -149,7 +149,7 @@ Module.register("MMM-MyBMW", {
 
     var elecRange = document.createElement("span");
     elecRange.classList.add("elecRange");
-    if (this.config.showElectricRange && (info.electricRange > 0)) {
+    if (this.config.showElectricRange && (info.electricRange != '')) {
       elecRange.appendChild(this.faIconFactory("fa-charging-station"));
       elecRange.appendChild(document.createTextNode(info.electricRange));
     } else {
@@ -177,7 +177,7 @@ Module.register("MMM-MyBMW", {
     
     var fuelRange = document.createElement("span");
     fuelRange.classList.add("fuelRange");
-    if (this.config.showFuelRange && (info.fuelRange > 0)) {
+    if (this.config.showFuelRange && (info.fuelRange != '')) {
       fuelRange.appendChild(this.faIconFactory("fa-gas-pump"));
       fuelRange.appendChild(document.createTextNode(info.fuelRange));
     } else {

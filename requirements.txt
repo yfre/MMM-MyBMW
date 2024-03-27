@@ -1,1 +1,1 @@
-bimmer_connected
+bimmer-connected

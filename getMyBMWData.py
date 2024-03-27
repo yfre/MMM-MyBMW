@@ -22,17 +22,20 @@ async def main(email, password, vin, region):
 
     filename = 'modules/MMM-MyBMW/car-' + vin + '.png'
     if (not os.path.isfile(filename)):
-        image_data = await vehicle.get_vehicle_image(VehicleViewDirection.FRONTSIDE)
-        with open(filename, 'wb') as file:
-            file.write(image_data)
-            file.close()
+        try:
+            image_data = await vehicle.get_vehicle_image(VehicleViewDirection.FRONTSIDE)
+            with open(filename, 'wb') as file:
+                file.write(image_data)
+                file.close()
+        except Exception as e:
+            print('Vehicle image could not be downloaded: ', e, file=sys.stderr)
 
     data = {
         'updateTime': vehicle.vehicle_location.vehicle_update_timestamp.isoformat(),
         'mileage': f'{vehicle.mileage.value} {vehicle.mileage.unit}',
         'doorLock': (vehicle.doors_and_windows.door_lock_state == LockState.LOCKED) or (vehicle.doors_and_windows.door_lock_state == LockState.SECURED),
-        'fuelRange': f'{vehicle.fuel_and_battery.remaining_range_fuel.value} {vehicle.fuel_and_battery.remaining_range_fuel.unit}',
-        'electricRange': f'{vehicle.fuel_and_battery.remaining_range_electric.value} {vehicle.fuel_and_battery.remaining_range_electric.unit}',
+        'fuelRange': f'{vehicle.fuel_and_battery.remaining_range_fuel.value} {vehicle.fuel_and_battery.remaining_range_fuel.unit}' if (vehicle.fuel_and_battery.remaining_range_fuel.value != None) else '',
+        'electricRange': f'{vehicle.fuel_and_battery.remaining_range_electric.value} {vehicle.fuel_and_battery.remaining_range_electric.unit}' if (vehicle.fuel_and_battery.remaining_range_electric.value != None) else '',
         'chargingLevelHv': vehicle.fuel_and_battery.remaining_battery_percent,
         'connectorStatus': vehicle.fuel_and_battery.is_charger_connected,
         'vin': vehicle.vin,
