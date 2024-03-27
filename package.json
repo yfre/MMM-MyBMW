@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "install": "npm install && pip -r requirements.txt"
+    "preinstall": "echo 'Installing Python Dependencies...' && pip install -r requirements.txt --no-warn-script-location"
   },
   "author": "Jonathan Andree",
   "license": "MIT",
