@@ -9,6 +9,8 @@ from bimmer_connected.account import MyBMWAccount
 from bimmer_connected.api.regions import Regions
 from bimmer_connected.vehicle.vehicle import VehicleViewDirection
 from bimmer_connected.vehicle.doors_windows import LockState
+
+token = ""
 def load_oauth_store_from_file(oauth_store: Path, account: MyBMWAccount) -> Dict:
     """Load the OAuth details from a file if it exists."""
     if not oauth_store.exists():
@@ -52,11 +54,11 @@ async def main(email, password, vin, region):
         region = Regions.REST_OF_WORLD
 
     account = MyBMWAccount(email, password, region)
+#    account = MyBMWAccount(email, password, region, hcaptcha_token=token)
     load_oauth_store_from_file(Path("./token.json"),account)
     await account.get_vehicles()
     vehicle = account.get_vehicle(vin)
-    print(account.config.authentication.refresh_token)
- #   store_oauth_store_to_file(Path("./token.json"),account)
+    store_oauth_store_to_file(Path("./token.json"),account)
 
     filename = 'modules/MMM-MyBMW/car-' + vin + '.png'
     if (not os.path.isfile(filename)):
